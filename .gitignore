@@ -1,0 +1,49 @@
+# Private backups
+*.backup-*
+*.bak
+*.bak.*
+*.orig
+*.save
+
+# Logs and runtime data
+/logs/
+logs/
+*.log
+Backups/
+Settings/
+Secrets/
+Private/
+
+# Local credentials and configuration
+.env
+.env.*
+*.local
+
+# Archives and checksums
+*.tar
+*.tar.gz
+*.tgz
+*.sha256
+*.checksum
+
+# Signing keys and certificates
+*.pem
+*.key
+*.keystore
+*.jks
+
+# Android build artifacts
+*.apk
+*.aab
+*.dex
+*.class
+.gradle/
+build/
+*/build/
+
+# Development and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+node_modules/
