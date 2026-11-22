@@ -36,7 +36,9 @@ After the Termux Setup Installer has completed successfully:
 1. Open Termux.
 2. Type the following command:
 
-   `opencode`
+```bash
+opencode
+```
 
 3. Press Enter to launch OpenCode.
 
