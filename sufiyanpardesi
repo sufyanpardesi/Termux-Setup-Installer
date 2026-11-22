@@ -1,0 +1,57 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -Eeuo pipefail
+
+REPO="https://github.com/sufyanpardesi/Termux-Setup-Installer.git"
+BASE="$HOME/Sufiyan-Pardesi"
+TARGET="$BASE/Installer"
+
+echo "========================================"
+echo "       SUFIYAN PARDESI CREATOR"
+echo "          TERMUX INSTALLER"
+echo "========================================"
+
+if [[ -z "${PREFIX:-}" || ! -d "$PREFIX" ]]; then
+    echo "ERROR: This installer requires Termux."
+    exit 1
+fi
+
+if ! command -v git >/dev/null 2>&1; then
+    pkg install -y git || exit 1
+fi
+
+if [[ -L "$BASE" || -L "$TARGET" || -L "$TARGET/.git" ]]; then
+    echo "ERROR: Unsafe symbolic link detected."
+    exit 1
+fi
+
+mkdir -p "$BASE"
+
+if [[ -d "$TARGET/.git" ]]; then
+    REMOTE="$(git -C "$TARGET" remote get-url origin 2>/dev/null || true)"
+    BRANCH="$(git -C "$TARGET" branch --show-current 2>/dev/null || true)"
+
+    if [[ "$REMOTE" != "$REPO" || "$BRANCH" != "main" ]]; then
+        echo "ERROR: Existing installer repository validation failed."
+        exit 1
+    fi
+
+    if [[ -n "$(git -C "$TARGET" status --porcelain)" ]]; then
+        echo "ERROR: Local installer changes detected. Update cancelled."
+        exit 1
+    fi
+
+    git -C "$TARGET" pull --ff-only origin main || exit 1
+elif [[ -e "$TARGET" ]]; then
+    echo "ERROR: Installer folder already exists but is not a valid repository."
+    exit 1
+else
+    git clone --branch main --single-branch "$REPO" "$TARGET" || exit 1
+fi
+
+if [[ ! -f "$TARGET/installer/bootstrap.sh" || -L "$TARGET/installer/bootstrap.sh" ]]; then
+    echo "ERROR: Bootstrap file is missing or unsafe."
+    exit 1
+fi
+
+echo "Starting SUFIYAN PARDESI installer..."
+exec bash "$TARGET/installer/bootstrap.sh"
